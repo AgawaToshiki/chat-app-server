@@ -12,6 +12,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
+console.log(process.env.ALLOWED_ORIGIN);
 
 const PORT = process.env.PORT
 
