@@ -1,16 +1,17 @@
 const express = require("express");
 const { createServer } = require('node:http');
 const { Server } = require('socket.io');
+require("dotenv").config()
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000"]
+    origin: [process.env.ALLOWED_ORIGIN]
   }
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT
 
 //クライアントと通信
 io.on("connection", (socket) => {
