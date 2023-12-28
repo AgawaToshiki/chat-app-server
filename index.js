@@ -7,7 +7,8 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [`${process.env.ALLOWED_ORIGIN}` || "https://chat-app-client-rose.vercel.app"]
+    origin: [`${process.env.ALLOWED_ORIGIN}`],
+    methods: ["GET", "POST"]
   }
 });
 
