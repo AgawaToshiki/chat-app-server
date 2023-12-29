@@ -1,17 +1,10 @@
 const express = require("express");
-const cors = require('cors');
 const { createServer } = require('node:http');
 const { Server } = require('socket.io');
 require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}`})
 
 
 const app = express();
-app.use(cors({
-  origin: `${process.env.ALLOWED_ORIGIN}`,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-}));
-
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
