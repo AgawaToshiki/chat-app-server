@@ -9,9 +9,16 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [`${process.env.ALLOWED_ORIGIN}` || "http://localhost:3000"],
+    origin: [`${process.env.ALLOWED_ORIGIN}`],
     methods: ["GET", "POST"]
   }
+});
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', `${process.env.ALLOWED_ORIGIN}`);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  next();
 });
 console.log(process.env.ALLOWED_ORIGIN);
 console.log(process.env.NODE_ENV)
