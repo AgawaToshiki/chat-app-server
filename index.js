@@ -1,10 +1,16 @@
 const express = require("express");
+const cors = require('cors');
 const { createServer } = require('node:http');
 const { Server } = require('socket.io');
 require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}`})
 
 
 const app = express();
+app.use(cors({
+  origin: `${process.env.ALLOWED_ORIGIN}`,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -14,12 +20,6 @@ const io = new Server(server, {
   }
 });
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', `${process.env.ALLOWED_ORIGIN}`);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  next();
-});
 console.log(process.env.ALLOWED_ORIGIN);
 console.log(process.env.NODE_ENV)
 const PORT = process.env.PORT
