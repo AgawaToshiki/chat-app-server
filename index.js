@@ -1,7 +1,8 @@
 const express = require("express");
 const { createServer } = require('node:http');
 const { Server } = require('socket.io');
-require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}`})
+require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}`});
+const { Thread } = require("./models");
 
 
 const app = express();
@@ -10,12 +11,15 @@ const io = new Server(server, {
   cors: {
     origin: [`${process.env.ALLOWED_ORIGIN}`],
     methods: ["GET", "POST"]
-  }
+  },
+  connectionStateRecovery: {}
 });
 
+
 console.log(process.env.ALLOWED_ORIGIN);
-console.log(process.env.NODE_ENV)
-const PORT = process.env.PORT
+console.log(process.env.NODE_ENV);
+const PORT = process.env.PORT;
+
 
 //クライアントと通信
 io.on("connection", (socket) => {
@@ -28,11 +32,20 @@ io.on("connection", (socket) => {
     io.emit("received_message", data)
   })
 
-
-
   socket.on('disconnect', () => {
     console.log('クライアントと接続が切れました');
   });
+
+
+  socket.on("create_thread", async(data) => {
+    console.log(data);
+    await Thread.create({
+      id: data.id,
+      title: data.title
+    })
+
+      io.emit("received_thread", data);
+  })
 })
 
 server.listen(PORT, () => console.log(`server is running on ${PORT}`));
