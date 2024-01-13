@@ -28,15 +28,15 @@ async function main() {
     io.emit("received_thread", threads);
   };
 
-  const getChat = async (id) => {
-    const chat = await Chat.findAll({
-      attributes: ["id", "message", "username", "threadId"],
-      where: {
-        threadId: id
-      }
-    })
-    io.emit("received_message", chat);
-  }
+  // const getChat = async (id) => {
+  //   const chat = await Chat.findAll({
+  //     attributes: ["id", "message", "username", "threadId"],
+  //     where: {
+  //       threadId: id
+  //     }
+  //   })
+  //   io.emit("received_message", chat);
+  // }
 
 
   //クライアントと通信
@@ -47,7 +47,7 @@ async function main() {
 
     //クライアントから受信
     socket.on("send_message", async(data) => {
-      socket.join(data.threadId);
+      // socket.join(data.threadId);
       console.log(data);
       try {
         await Chat.create({
@@ -56,11 +56,12 @@ async function main() {
           threadId: data.threadId,
           username: data.username
         })
-        await getChat(data.threadId);
+        // await getChat(data.threadId);
       } catch(e) {
         console.log(`errorMessage:${e}`)
         return;
       }
+      io.emit("received_message", data);
     })
 
     socket.on('disconnect', () => {
